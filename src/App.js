@@ -15,8 +15,16 @@ import api from "./services/api";
 export default function App() {
   const [repositories, setRepositories] = useState([]);
 
-  async function handleLikeRepository(id) {
-    // Implement "Like Repository" functionality
+  function handleLikeRepository(id) {
+    api.post(`/repositories/${id}/like`).then(({ data: { likes } }) => {
+      const repositoryIndex = repositories.findIndex((item) => item.id === id);
+      let newRepository = repositories[repositoryIndex];
+      newRepository.likes = likes;
+
+      let mewRepositoriesState = Array.from(repositories);
+      mewRepositoriesState.splice(repositoryIndex, 1, newRepository);
+      setRepositories(mewRepositoriesState);
+    });
   }
 
   useEffect(() => {
